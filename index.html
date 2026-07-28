@@ -1,335 +1,1103 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>포트폴리오</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIM JINSOO // NETWORK ENGINEER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Barlow+Condensed:wght@300;500;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            overflow-x: hidden;
-        }
+  :root {
+    --void:    #080C18;
+    --panel:   #0E1629;
+    --border:  #1E2E50;
+    --green:   #00FF88;
+    --blue:    #00B4D8;
+    --orange:  #FF6B35;
+    --gray:    #8892B0;
+    --white:   #CDD6F4;
+    --dim:     #4A5480;
+  }
 
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
+  html { scroll-behavior: smooth; }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-        }
+  body {
+    background: var(--void);
+    color: var(--white);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
 
-        nav a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
+  ::selection { background: var(--green); color: var(--void); }
 
-        nav a:hover {
-            color: #667eea;
-        }
+  /* ─── TOPOLOGY HERO ──────────────────────────────── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 6vw 5vh;
+    overflow: hidden;
+  }
 
-        section {
-            min-height: 100vh;
-            padding: 6rem 2rem 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+  #topology-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
 
-        .container {
-            max-width: 1200px;
-            width: 100%;
-        }
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--green);
+    margin-bottom: 1.2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.3s forwards;
+  }
 
-        #hero {
-            text-align: center;
-            color: white;
-        }
+  .hero-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.5s forwards;
+  }
 
-        #hero h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            animation: fadeInUp 1s ease;
-        }
+  .hero-name span {
+    display: block;
+    color: var(--green);
+    -webkit-text-stroke: 1px var(--green);
+    color: transparent;
+  }
 
-        #hero p {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            animation: fadeInUp 1s ease 0.2s backwards;
-        }
+  .hero-meta {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.8s forwards;
+  }
 
-        .btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: white;
-            color: #667eea;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
-            animation: fadeInUp 1s ease 0.4s backwards;
-        }
+  .hero-meta .badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 12px;
+    color: var(--gray);
+    letter-spacing: 0.05em;
+  }
 
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
+  .hero-meta .badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: blink 1.8s ease-in-out infinite;
+  }
 
-        #about, #projects, #contact {
-            background: white;
-        }
+  .hero-meta .badge .dot.orange { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
 
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            text-align: center;
-            color: #667eea;
-        }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
 
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    right: 6vw;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.15em;
+    writing-mode: vertical-rl;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    opacity: 0;
+    animation: fadeUp 1s 1.2s forwards;
+  }
 
-        .skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
+  .scroll-hint::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--dim));
+    animation: lineGrow 2s 1.5s forwards;
+  }
 
-        .skill {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 25px;
-            font-weight: 600;
-        }
+  /* ─── LAYOUT ──────────────────────────────────────── */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 6vw;
+  }
 
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
+  /* ─── PANEL COMPONENT ────────────────────────────── */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
 
-        .project-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
+  .panel-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.2rem;
+    background: var(--border);
+    border-bottom: 1px solid var(--dim);
+  }
 
-        .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-        }
+  .panel-bar .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .panel-bar .dot.r { background: #FF5F57; }
+  .panel-bar .dot.y { background: #FEBC2E; }
+  .panel-bar .dot.g { background: #28C840; }
 
-        .project-card h3 {
-            color: #667eea;
-            margin-bottom: 1rem;
-        }
+  .panel-bar .label {
+    margin-left: 0.5rem;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
 
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+  .panel-body { padding: 2rem; }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+  /* ─── SECTION TITLES ─────────────────────────────── */
+  .section-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #667eea;
-        }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: var(--white);
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 3rem;
+  }
 
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
+  /* ─── NAV ─────────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1rem 6vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(8,12,24,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
 
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+  .nav-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
 
-        .submit-btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
 
-        .submit-btn:hover {
-            transform: translateY(-2px);
-        }
+  .nav-links a:hover { color: var(--green); }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+  /* ─── ABOUT ──────────────────────────────────────── */
+  #about { padding: 8rem 0 5rem; }
 
-        @media (max-width: 768px) {
-            #hero h1 {
-                font-size: 2.5rem;
-            }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
 
-            #hero p {
-                font-size: 1.2rem;
-            }
+  .about-text { color: var(--gray); line-height: 2; }
+  .about-text p + p { margin-top: 1rem; }
+  .about-text strong { color: var(--white); font-weight: 500; }
 
-            .about-content {
-                grid-template-columns: 1fr;
-            }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
 
-            nav ul {
-                gap: 1rem;
-            }
-        }
-    </style>
+  .stat-cell {
+    background: var(--panel);
+    padding: 1.8rem 1.5rem;
+    position: relative;
+  }
+
+  .stat-cell::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--green);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .stat-cell:hover::before { opacity: 1; }
+
+  .stat-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--green);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+  }
+
+  /* ─── CERTIFICATIONS ─────────────────────────────── */
+  #certs { padding: 5rem 0; }
+
+  .certs-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .cert-item {
+    background: var(--panel);
+    padding: 1.5rem 1.8rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    transition: background 0.2s;
+    cursor: default;
+  }
+
+  .cert-item:hover { background: #111929; }
+
+  .cert-icon {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.2);
+  }
+
+  .cert-name {
+    font-size: 13px;
+    color: var(--white);
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+  }
+
+  .cert-issuer {
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.05em;
+  }
+
+  .cert-badge {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    border: 1px solid;
+    text-transform: uppercase;
+    align-self: center;
+  }
+
+  .cert-badge.active { color: var(--green); border-color: var(--green); background: rgba(0,255,136,0.06); }
+  .cert-badge.study  { color: var(--orange); border-color: var(--orange); background: rgba(255,107,53,0.06); }
+
+  /* ─── SKILLS ─────────────────────────────────────── */
+  #skills { padding: 5rem 0; }
+
+  .skills-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-group-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  .skill-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.9rem;
+  }
+
+  .skill-name { font-size: 13px; color: var(--gray); }
+
+  .skill-bar-track {
+    width: 40%;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .skill-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 2px;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 1s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .skill-bar-fill.blue { background: var(--blue); }
+  .skill-bar-fill.orange { background: var(--orange); }
+
+  .skill-bar-fill.animate { transform: scaleX(1); }
+
+  /* ─── PROJECTS ───────────────────────────────────── */
+  #projects { padding: 5rem 0; }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    background: var(--panel);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,255,136,0.04), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .project-card:hover {
+    border-color: var(--green);
+    transform: translateY(-4px);
+  }
+
+  .project-card:hover::after { opacity: 1; }
+
+  .project-type {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .project-type::before {
+    content: '';
+    display: inline-block;
+    width: 20px; height: 1px;
+    background: var(--dim);
+  }
+
+  .project-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 0.8rem;
+  }
+
+  .project-desc {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .project-tag {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.6rem;
+    background: rgba(0,180,216,0.1);
+    border: 1px solid rgba(0,180,216,0.3);
+    color: var(--blue);
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ─── CONTACT ────────────────────────────────────── */
+  #contact { padding: 5rem 0 8rem; }
+
+  .contact-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .contact-headline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--white);
+  }
+
+  .contact-headline em {
+    font-style: normal;
+    color: var(--green);
+    display: block;
+  }
+
+  .contact-sub {
+    margin-top: 1.5rem;
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.9;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.25s;
+    background: var(--panel);
+  }
+
+  .contact-link:hover {
+    border-color: var(--green);
+    color: var(--white);
+    background: rgba(0,255,136,0.04);
+  }
+
+  .contact-link .icon { font-size: 18px; width: 24px; text-align: center; }
+
+  .contact-link .arrow {
+    margin-left: auto;
+    color: var(--dim);
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  .contact-link:hover .arrow { transform: translateX(4px); color: var(--green); }
+
+  /* ─── FOOTER ─────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 6vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+  }
+
+  .uptime-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--green);
+  }
+
+  .uptime-badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: blink 1.8s infinite;
+  }
+
+  /* ─── ANIMATIONS ─────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── RESPONSIVE ─────────────────────────────────── */
+  @media (max-width: 768px) {
+    .about-grid,
+    .contact-wrap { grid-template-columns: 1fr; }
+
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+
+    .nav-links { display: none; }
+
+    .hero-name { font-size: clamp(3rem, 15vw, 5rem); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="#hero">홈</a></li>
-            <li><a href="#about">소개</a></li>
-            <li><a href="#projects">프로젝트</a></li>
-            <li><a href="#contact">연락</a></li>
-        </ul>
-    </nav>
 
-    <section id="hero">
-        <div class="container">
-            <h1>안녕하세요, 이정훈입니다</h1>
-            <p>Security Engineering</p>
-            <a href="#projects" class="btn">프로젝트 보기</a>
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">KJ.NET</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#certs">Certs</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="topology-canvas"></canvas>
+
+  <div class="hero-label">// NETWORK ENGINEER :: PORTFOLIO v2.0</div>
+  <h1 class="hero-name">
+    KIM<br>
+    <span>JINSOO</span>
+  </h1>
+  <div class="hero-meta">
+    <div class="badge"><span class="dot"></span> SYSTEM ONLINE</div>
+    <div class="badge"><span class="dot orange"></span> 3YRS EXPERIENCE</div>
+    <div class="badge">✦ CCNA &bull; CCNP &bull; AWS-NET</div>
+  </div>
+
+  <div class="scroll-hint">SCROLL DOWN</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">// 01 — ABOUT</p>
+      <h2 class="section-title">WHO IS<br>ON THE LINE?</h2>
+    </div>
+    <div class="about-grid reveal">
+      <div>
+        <div class="panel">
+          <div class="panel-bar">
+            <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+            <span class="label">profile.md</span>
+          </div>
+          <div class="panel-body">
+            <p class="about-text">
+              <p>네트워크 인프라 설계와 최적화를 담당하는 <strong>네트워크 엔지니어 김진수</strong>입니다.
+              엔터프라이즈 규모의 LAN/WAN 환경을 설계하고 운영해왔습니다.</p>
+              <p>라우팅 프로토콜의 튜닝부터 데이터센터 패브릭 구성까지, 패킷이 지나는 모든 경로를
+              책임집니다. <strong>자동화</strong>와 <strong>옵저버빌리티</strong>에 관심이 많습니다.</p>
+              <p>코드로 네트워크를 정의하고, 데이터로 장애를 예측하는 것이 목표입니다.</p>
+            </p>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <section id="about">
-        <div class="container">
-            <h2>About Me</h2>
-            <div class="about-content">
-                <div>
-                    <p style="line-height: 1.8; font-size: 1.1rem;">
-                        안녕하세요! 저는 사용자 경험을 최우선으로 생각하는 보안 엔지니어입니다. 
-                        새로운 기술을 배우는 것을 좋아하고, 끊임없이 성장하는 개발자가 되기 위해 노력하고 있습니다.
-                    </p>
-                </div>
-                <div>
-                    <h3 style="margin-bottom: 1rem; color: #667eea;">기술 스택</h3>
-                    <div class="skills">
-                        <span class="skill">HTML/CSS</span>
-                        <span class="skill">JavaScript</span>
-                        <span class="skill">React</span>
-                        <span class="skill">Node.js</span>
-                        <span class="skill">Python</span>
-                        <span class="skill">UI/UX</span>
-                    </div>
-                </div>
-            </div>
+      <div class="stats-grid">
+        <div class="stat-cell">
+          <div class="stat-number">99.9<span style="font-size:1.8rem">%</span></div>
+          <div class="stat-label">Uptime Target</div>
         </div>
-    </section>
-
-    <section id="projects">
-        <div class="container">
-            <h2>Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <h3>🌐 E-Commerce Platform</h3>
-                    <p>React와 Node.js로 구축한 완전한 기능의 온라인 쇼핑몰. 사용자 인증, 결제 시스템, 관리자 대시보드 포함.</p>
-                </div>
-                <div class="project-card">
-                    <h3>📱 모바일 앱 디자인</h3>
-                    <p>건강 관리 앱을 위한 직관적이고 현대적인 UI/UX 디자인. 사용자 중심의 인터페이스와 인터랙티브 요소.</p>
-                </div>
-                <div class="project-card">
-                    <h3>🎨 포트폴리오 사이트</h3>
-                    <p>애니메이션과 인터랙티브 요소가 풍부한 개인 포트폴리오 웹사이트. 반응형 디자인과 최적화된 성능.</p>
-                </div>
-            </div>
+        <div class="stat-cell">
+          <div class="stat-number">200<span style="font-size:1.8rem">+</span></div>
+          <div class="stat-label">Devices Managed</div>
         </div>
-    </section>
+        <div class="stat-cell">
+          <div class="stat-number">3<span style="font-size:1.8rem">yr</span></div>
+          <div class="stat-label">Field Experience</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-number">0</div>
+          <div class="stat-label">Unresolved P1s</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-        // 스무스 스크롤
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                target.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
+<!-- CERTIFICATIONS -->
+<section id="certs">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">// 02 — CERTIFICATIONS</p>
+      <h2 class="section-title">VERIFIED<br>CREDENTIALS</h2>
+    </div>
+    <div class="certs-list reveal">
+      <div class="cert-item">
+        <div class="cert-icon">🛡️</div>
+        <div>
+          <div class="cert-name">CCNP Enterprise</div>
+          <div class="cert-issuer">Cisco Systems — 2023</div>
+        </div>
+        <span class="cert-badge active">Active</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">🌐</div>
+        <div>
+          <div class="cert-name">CCNA Routing & Switching</div>
+          <div class="cert-issuer">Cisco Systems — 2021</div>
+        </div>
+        <span class="cert-badge active">Active</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">☁️</div>
+        <div>
+          <div class="cert-name">AWS Advanced Networking</div>
+          <div class="cert-issuer">Amazon Web Services — 2022</div>
+        </div>
+        <span class="cert-badge active">Active</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">🔒</div>
+        <div>
+          <div class="cert-name">CompTIA Security+</div>
+          <div class="cert-issuer">CompTIA — 2022</div>
+        </div>
+        <span class="cert-badge active">Active</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">⚡</div>
+        <div>
+          <div class="cert-name">CCIE Enterprise Infrastructure</div>
+          <div class="cert-issuer">Cisco Systems — In Progress</div>
+        </div>
+        <span class="cert-badge study">Studying</span>
+      </div>
+      <div class="cert-item">
+        <div class="cert-icon">🖥️</div>
+        <div>
+          <div class="cert-name">LFCS Linux Foundation</div>
+          <div class="cert-issuer">Linux Foundation — 2023</div>
+        </div>
+        <span class="cert-badge active">Active</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-        // 폼 제출
-        document.querySelector('.contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('메시지가 전송되었습니다! (데모 버전)');
-            this.reset();
-        });
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">// 03 — SKILLS</p>
+      <h2 class="section-title">TECHNICAL<br>STACK</h2>
+    </div>
+    <div class="skills-row reveal" id="skills-grid">
 
-        // 스크롤 애니메이션
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        });
+      <div class="panel">
+        <div class="panel-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span class="label">network_protocols</span>
+        </div>
+        <div class="panel-body">
+          <p class="skill-group-label">// Routing & Switching</p>
 
-        document.querySelectorAll('.project-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.5s, transform 0.5s';
-            observer.observe(card);
-        });
-    </script>
+          <div class="skill-entry"><span class="skill-name">BGP / OSPF / EIGRP</span><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="0.95"></div></div></div>
+          <div class="skill-entry"><span class="skill-name">MPLS / SD-WAN</span><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="0.85"></div></div></div>
+          <div class="skill-entry"><span class="skill-name">VLAN / STP / VPC</span><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="0.92"></div></div></div>
+          <div class="skill-entry"><span class="skill-name">QoS / Traffic Shaping</span><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="0.80"></div></div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span class="label">cloud_infra</span>
+        </div>
+        <div class="panel-body">
+          <p class="skill-group-label">// Cloud & Security</p>
+
+          <div class="skill-entry"><span class="skill-name">AWS VPC / Transit GW</span><div class="skill-bar-track"><div class="skill-bar-fill blue" data-pct="0.88"></div></div></div>
+          <div class="skill-entry"><span class="skill-name">Firewall (ASA / Palo)</span><div class="skill-bar-track"><div class="skill-bar-fill blue" data-pct="0.82"></div></div></div>
+          <div class="skill-entry"><span class="skill-name">VPN / IPSec / SSL</span><div class="skill-bar-track"><div class="skill-bar-fill blue" data-pct="0.90"></div></div></div>
+          <div class="skill-entry"><span class="skill-name">Zero Trust / SASE</span><div class="skill-bar-track"><div class="skill-bar-fill blue" data-pct="0.70"></div></div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <span class="label">automation</span>
+        </div>
+        <div class="panel-body">
+          <p class="skill-group-label">// Automation & Observability</p>
+
+          <div class="skill-entry"><span class="skill-name">Python / Netmiko</span><div class="skill-bar-track"><div class="skill-bar-fill orange" data-pct="0.80"></div></div></div>
+          <div class="skill-entry"><span class="skill-name">Ansible / Terraform</span><div class="skill-bar-track"><div class="skill-bar-fill orange" data-pct="0.75"></div></div></div>
+          <div class="skill-entry"><span class="skill-name">Grafana / Prometheus</span><div class="skill-bar-track"><div class="skill-bar-fill orange" data-pct="0.72"></div></div></div>
+          <div class="skill-entry"><span class="skill-name">SNMP / NetFlow / sFlow</span><div class="skill-bar-track"><div class="skill-bar-fill orange" data-pct="0.88"></div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">// 04 — PROJECTS</p>
+      <h2 class="section-title">NOTABLE<br>DEPLOYMENTS</h2>
+    </div>
+    <div class="projects-grid reveal">
+
+      <div class="project-card">
+        <div class="project-type">ENTERPRISE INFRA</div>
+        <h3 class="project-title">Campus Network Redesign</h3>
+        <p class="project-desc">본사·지사 15개 사이트를 포함한 엔터프라이즈 캠퍼스 네트워크 전면 재설계. 레거시 STP 환경을 VXLAN/EVPN 기반 패브릭으로 전환해 장애 복구 시간 85% 단축.</p>
+        <div class="project-tags">
+          <span class="project-tag">VXLAN</span>
+          <span class="project-tag">EVPN</span>
+          <span class="project-tag">Cisco Nexus</span>
+          <span class="project-tag">BGP</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-type">CLOUD MIGRATION</div>
+        <h3 class="project-title">Hybrid WAN to SD-WAN</h3>
+        <p class="project-desc">전국 30개 지점 MPLS 전용선을 Cisco Viptela SD-WAN으로 전환. 회선 비용 40% 절감과 동시에 애플리케이션 가시성을 대폭 향상.</p>
+        <div class="project-tags">
+          <span class="project-tag">SD-WAN</span>
+          <span class="project-tag">Viptela</span>
+          <span class="project-tag">MPLS</span>
+          <span class="project-tag">AWS TGW</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-type">AUTOMATION</div>
+        <h3 class="project-title">NetDevOps Pipeline</h3>
+        <p class="project-desc">Python + Ansible 기반 네트워크 구성 자동화 파이프라인 구축. 수동 작업 95% 감소, GitOps 방식으로 변경사항을 코드로 관리.</p>
+        <div class="project-tags">
+          <span class="project-tag">Python</span>
+          <span class="project-tag">Ansible</span>
+          <span class="project-tag">Netmiko</span>
+          <span class="project-tag">GitLab CI</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-type">OBSERVABILITY</div>
+        <h3 class="project-title">NOC Dashboard v2</h3>
+        <p class="project-desc">Grafana + Prometheus + SNMP 기반의 실시간 NOC 대시보드 구축. 이상 트래픽 탐지 알림 자동화로 MTTR 60% 개선.</p>
+        <div class="project-tags">
+          <span class="project-tag">Grafana</span>
+          <span class="project-tag">Prometheus</span>
+          <span class="project-tag">SNMP</span>
+          <span class="project-tag">NetFlow</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-eyebrow">// 05 — CONTACT</p>
+    </div>
+    <div class="contact-wrap reveal">
+      <div>
+        <h2 class="contact-headline">LET'S BUILD<br><em>BETTER NETS.</em></h2>
+        <p class="contact-sub">새로운 프로젝트나 기회에 대해 언제든지 연락 주세요.<br>패킷은 항상 경로를 찾습니다.</p>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:jinsoo@example.com" class="contact-link">
+          <span class="icon">📧</span>
+          <span>jinsoo@example.com</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://github.com/" target="_blank" class="contact-link">
+          <span class="icon">💻</span>
+          <span>github.com/kimjinsoo</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://linkedin.com/" target="_blank" class="contact-link">
+          <span class="icon">💼</span>
+          <span>linkedin.com/in/kimjinsoo</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://blog.example.com/" target="_blank" class="contact-link">
+          <span class="icon">📝</span>
+          <span>Tech Blog</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 KIM JINSOO — NETWORK ENGINEER</span>
+  <span class="uptime-badge"><span class="dot"></span> ALL SYSTEMS NOMINAL</span>
+</footer>
+
+<script>
+// ─── TOPOLOGY CANVAS ANIMATION ──────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('topology-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes, edges, packets;
+
+  const NODE_COUNT = 22;
+  const PACKET_COUNT = 18;
+  const GREEN = '#00FF88';
+  const BLUE  = '#00B4D8';
+  const ORANGE= '#FF6B35';
+  const DIM   = '#1E2E50';
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    init();
+  }
+
+  function init() {
+    // Place nodes on a scattered grid with some fixed "router" nodes
+    nodes = [];
+    for (let i = 0; i < NODE_COUNT; i++) {
+      const isCentral = i < 3;
+      nodes.push({
+        x: isCentral ? W * (0.3 + i * 0.2) : Math.random() * W * 0.9 + W * 0.05,
+        y: isCentral ? H * 0.45            : Math.random() * H * 0.7 + H * 0.15,
+        r: isCentral ? 6 : 3 + Math.random() * 3,
+        type: isCentral ? 'core' : (Math.random() > 0.7 ? 'dist' : 'access'),
+        pulse: Math.random() * Math.PI * 2,
+      });
+    }
+
+    // Connect nearby nodes
+    edges = [];
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < W * 0.22) {
+          edges.push({ a: i, b: j, dist });
+        }
+      }
+    }
+    // Guarantee cores are connected
+    if (!edges.find(e => (e.a===0&&e.b===1)||(e.a===1&&e.b===0))) edges.push({a:0,b:1});
+    if (!edges.find(e => (e.a===1&&e.b===2)||(e.a===2&&e.b===1))) edges.push({a:1,b:2});
+    if (!edges.find(e => (e.a===0&&e.b===2)||(e.a===2&&e.b===0))) edges.push({a:0,b:2});
+
+    // Packets travelling along edges
+    packets = [];
+    for (let i = 0; i < PACKET_COUNT; i++) {
+      spawnPacket();
+    }
+  }
+
+  function spawnPacket() {
+    if (!edges || edges.length === 0) return;
+    const edge = edges[Math.floor(Math.random() * edges.length)];
+    const dir = Math.random() > 0.5 ? 1 : -1;
+    const colors = [GREEN, BLUE, ORANGE];
+    packets.push({
+      edge,
+      t: dir === 1 ? 0 : 1,
+      speed: (0.003 + Math.random() * 0.007) * dir,
+      color: colors[Math.floor(Math.random() * colors.length)],
+    });
+  }
+
+  function draw(ts) {
+    ctx.clearRect(0, 0, W, H);
+
+    // Edges
+    edges.forEach(e => {
+      const a = nodes[e.a], b = nodes[e.b];
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = DIM;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // Nodes
+    nodes.forEach(n => {
+      n.pulse += 0.03;
+      const pAlpha = (Math.sin(n.pulse) * 0.5 + 0.5) * 0.4;
+      const color = n.type === 'core' ? GREEN : n.type === 'dist' ? BLUE : DIM;
+
+      if (n.type === 'core') {
+        // outer ring
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r + 8 + Math.sin(n.pulse) * 4, 0, Math.PI * 2);
+        ctx.strokeStyle = GREEN;
+        ctx.globalAlpha = pAlpha;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = n.type === 'core' ? 18 : 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+
+    // Packets
+    packets.forEach((p, idx) => {
+      p.t += p.speed;
+      if (p.t > 1 || p.t < 0) {
+        packets.splice(idx, 1);
+        spawnPacket();
+        return;
+      }
+      const a = nodes[p.edge.a], b = nodes[p.edge.b];
+      const x = a.x + (b.x - a.x) * p.t;
+      const y = a.y + (b.y - a.y) * p.t;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(draw);
+})();
+
+// ─── SCROLL REVEAL ───────────────────────────────────────────────────
+const reveals = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => revealObs.observe(el));
+
+// ─── SKILL BAR ANIMATION ─────────────────────────────────────────────
+const bars = document.querySelectorAll('.skill-bar-fill');
+const barObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      el.style.width = (parseFloat(el.dataset.pct) * 100) + '%';
+      el.classList.add('animate');
+      barObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+bars.forEach(b => { b.style.width = '0'; barObs.observe(b); });
+</script>
 </body>
 </html>
